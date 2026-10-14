@@ -1,5 +1,7 @@
 # AgentOps MCP
 
+**Live demo (static, GitHub Pages):** https://naveecode.github.io/agentops-mcp/
+
 [![ci](https://github.com/naveecode/agentops-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/naveecode/agentops-mcp/actions)
 
 A deployable AI agent service. A LangGraph ReAct agent answers questions over your documents and calls tools. The same tools are exposed as an **MCP server**, so Cursor and Claude Desktop can use them. Documents are chunked, embedded, and stored in MongoDB. Ingest runs inline, or through a RabbitMQ worker that retries and then dead-letters.
