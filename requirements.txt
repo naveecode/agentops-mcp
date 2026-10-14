@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+httpx
+pytest
+redis
+mcp
+langgraph
+langchain-openai
