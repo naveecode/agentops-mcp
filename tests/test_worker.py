@@ -5,7 +5,7 @@ from types import SimpleNamespace
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.queue import enqueue, failure_action, handle_delivery
+from app.queue import broker_parameters, enqueue, failure_action, handle_delivery
 from app.tools import search_docs
 from app.worker import on_message
 
@@ -99,7 +99,6 @@ def test_enqueue_publishes_when_a_broker_is_configured(monkeypatch):
 
     monkeypatch.setenv("RABBITMQ_URL", "amqp://guest:guest@localhost:5672/")
     monkeypatch.setattr("app.queue.pika.BlockingConnection", lambda params: Connection())
-    monkeypatch.setattr("app.queue.pika.URLParameters", lambda url: url)
     assert enqueue("d1", "hello") == {"id": "d1", "status": "queued"}
     assert published["routing_key"] == "ingest"
     assert json.loads(published["body"]) == {"id": "d1", "text": "hello"}
@@ -118,6 +117,12 @@ def test_health_reports_inline_queue_without_a_broker():
     body = client.get("/health").json()
     assert body["queue"] == "inline"
     assert body["cache"] == "memory"
+
+
+def test_broker_parameters_retry_while_rabbit_starts():
+    params = broker_parameters("amqp://guest:guest@rabbitmq:5672/", attempts=30)
+    assert params.connection_attempts == 30
+    assert params.retry_delay == 2
 
 
 def test_worker_refuses_to_start_without_a_broker(monkeypatch):

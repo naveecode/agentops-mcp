@@ -24,6 +24,14 @@ def uses_broker() -> bool:
     return bool(os.getenv("RABBITMQ_URL"))
 
 
+def broker_parameters(url: str, *, attempts: int = 8) -> pika.URLParameters:
+    """Retry long enough for RabbitMQ to finish starting in Compose or kind."""
+    params = pika.URLParameters(url)
+    params.connection_attempts = attempts
+    params.retry_delay = 2
+    return params
+
+
 def declare(channel) -> None:
     channel.exchange_declare(exchange=DEAD_LETTER_EXCHANGE, exchange_type="direct", durable=True)
     channel.queue_declare(queue=DEAD_LETTER_QUEUE, durable=True)
@@ -86,7 +94,7 @@ def enqueue(doc_id: str, text: str) -> dict:
         invalidate_prefix("ask:")
         return {"id": doc_id, "status": "stored"}
     body = json.dumps({"id": doc_id, "text": text}).encode()
-    connection = pika.BlockingConnection(pika.URLParameters(url))
+    connection = pika.BlockingConnection(broker_parameters(url))
     try:
         channel = connection.channel()
         declare(channel)

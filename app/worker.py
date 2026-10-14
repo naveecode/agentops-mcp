@@ -3,7 +3,7 @@ import os
 
 import pika
 
-from .queue import DEAD_LETTER_QUEUE, INGEST_QUEUE, declare, handle_delivery
+from .queue import DEAD_LETTER_QUEUE, INGEST_QUEUE, broker_parameters, declare, handle_delivery
 
 
 def _publish(channel, queue: str, body: bytes, headers: dict) -> None:
@@ -31,7 +31,7 @@ def on_message(channel, method, properties, body) -> None:
 
 def run_worker(url: str | None = None) -> None:
     url = url or os.environ["RABBITMQ_URL"]
-    connection = pika.BlockingConnection(pika.URLParameters(url))
+    connection = pika.BlockingConnection(broker_parameters(url, attempts=30))
     channel = connection.channel()
     declare(channel)
     channel.basic_qos(prefetch_count=1)
