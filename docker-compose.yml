@@ -30,6 +30,14 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+  web:
+    build: ./web
+    ports:
+      - "3000:3000"
+    environment:
+      API_URL: http://api:8000
+    depends_on:
+      - api
   redis:
     image: redis:7-alpine
   mongo:
