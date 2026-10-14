@@ -1,0 +1,35 @@
+# Render blueprint. Create the Redis, MongoDB, and RabbitMQ instances outside
+# this file (Upstash, Atlas, CloudAMQP) and fill the sync:false env vars.
+services:
+  - type: web
+    name: agentops-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: MODEL
+        value: gpt-4o-mini
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: MONGO_URL
+        sync: false
+      - key: MONGO_VECTOR_INDEX
+        sync: false
+      - key: RABBITMQ_URL
+        sync: false
+  - type: worker
+    name: agentops-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: python -m app.worker
+    envVars:
+      - key: REDIS_URL
+        sync: false
+      - key: MONGO_URL
+        sync: false
+      - key: MONGO_VECTOR_INDEX
+        sync: false
+      - key: RABBITMQ_URL
+        sync: false

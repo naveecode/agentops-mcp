@@ -10,3 +10,33 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements.txt
       - run: pytest -q
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t agentops-mcp .
+      - name: Smoke test
+        run: |
+          docker run -d --name agentops -p 8000:8000 agentops-mcp
+          for _ in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8000/health >/dev/null; then
+              curl -fsS -X POST http://127.0.0.1:8000/docs \
+                -H 'content-type: application/json' \
+                -d '{"id":"d1","text":"refund policy is 30 days"}'
+              echo
+              body=$(curl -fsS -X POST http://127.0.0.1:8000/ask \
+                -H 'content-type: application/json' \
+                -d '{"question":"2*(3+4)"}')
+              echo "$body"
+              python3 -c 'import json,sys; body=json.loads(sys.argv[1]); assert body["answer"]==14 and body["tool"]=="calculator"' "$body"
+              search=$(curl -fsS -X POST http://127.0.0.1:8000/ask \
+                -H 'content-type: application/json' \
+                -d '{"question":"refund policy"}')
+              python3 -c 'import json,sys; body=json.loads(sys.argv[1]); assert body["answer"][0]["id"]=="d1"' "$search"
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs agentops
+          exit 1
