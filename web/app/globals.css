@@ -1,0 +1,207 @@
+:root {
+  color-scheme: light;
+  --ink: #1c1916;
+  --muted: #6d645b;
+  --line: #e4dcd2;
+  --paper: #fffdf9;
+  --accent: #c24b2a;
+  --accent-ink: #fff8f4;
+  --chip: #f3ebe3;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: var(--font-sans), "Outfit", sans-serif;
+  background:
+    radial-gradient(880px 420px at 0% -10%, #f6d4c6 0%, transparent 60%),
+    radial-gradient(720px 380px at 100% 0%, #d7e6d4 0%, transparent 55%),
+    #f3efe8;
+}
+
+button, input, textarea { font: inherit; color: inherit; }
+
+.shell {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 36px 0 48px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--accent);
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 560;
+  font-size: clamp(40px, 5vw, 64px);
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+h2 { margin: 0 0 8px; font-size: 20px; }
+
+.pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+
+.pill, .chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.pill.bad { background: #fde8e2; border-color: #e7b2a4; color: #8a2e16; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.panel, .chat {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(60, 40, 20, 0.06);
+}
+
+.panel { padding: 22px; }
+
+.lede, .muted { color: var(--muted); }
+
+.lede { margin: 0 0 16px; line-height: 1.45; }
+
+.stack, .composer { display: grid; gap: 12px; }
+
+label { display: grid; gap: 6px; font-size: 14px; }
+
+input, textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+textarea { resize: vertical; }
+
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+button.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.note { margin: 0; color: #2f6f4e; }
+
+.chat { display: grid; grid-template-rows: 1fr auto auto; min-height: 640px; padding: 18px; }
+
+.transcript { display: grid; gap: 18px; align-content: start; }
+
+.empty {
+  margin: auto 0;
+  padding: 28px 8px;
+  color: var(--muted);
+}
+
+.empty p { margin: 0 0 8px; }
+
+.exchange { display: grid; gap: 6px; }
+
+.who {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.question { margin: 0; font-size: 18px; }
+
+.answer {
+  background: #faf7f3;
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+
+.meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+
+.chip { background: var(--chip); font-size: 12px; padding: 3px 8px; }
+
+.chip.quiet { background: transparent; }
+
+.plain { margin: 0; line-height: 1.45; white-space: pre-wrap; }
+
+.hits { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+
+.hits li { margin: 0; }
+
+.hit-head { display: flex; justify-content: space-between; gap: 12px; font-variant-numeric: tabular-nums; }
+
+.doc { font-weight: 650; }
+
+.score { color: var(--muted); font-size: 13px; }
+
+.hits p { margin: 4px 0 0; }
+
+.suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+.composer { grid-template-columns: 1fr auto; margin-top: 12px; }
+
+.error {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #fde8e2;
+  color: #8a2e16;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em; }
+
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+  .top { flex-direction: column; align-items: flex-start; }
+  .pills { justify-content: flex-start; }
+  .chat { min-height: 520px; }
+}
