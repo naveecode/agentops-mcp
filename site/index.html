@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgentOps MCP demo</title><style>body{font-family:system-ui;max-width:960px;margin:2rem auto;padding:0 1rem;color:#111}img{max-width:100%;border:1px solid #ddd;border-radius:8px}.row{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap}.row img{flex:1;min-width:240px}code{background:#f3f3f3;padding:0 .3rem}</style>
+<script type="module">import m from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";m.initialize({startOnLoad:true});</script></head><body>
+<h1>AgentOps MCP</h1>
+<p>A tool-calling LangGraph agent served by FastAPI with a Redis cache. The same tools are exposed as an MCP server for Cursor and Claude Desktop. <a href="https://github.com/naveecode/agentops-mcp">Source on GitHub</a>.</p>
+<p><em>This is a static demo page. The live backend is not hosted; run it locally with <code>docker compose up</code>.</em></p>
+<h2>Chat UI</h2><div class="row"><img src="screenshots/chat-desktop.png" alt="Chat UI, desktop"><img src="screenshots/chat-mobile.png" alt="Chat UI, mobile" style="max-width:280px"></div>
+<h2>Architecture</h2><pre class="mermaid">flowchart LR
+  UI[Next.js chat UI] --> API[FastAPI /ask]
+  API --> C[(Redis cache)]
+  API --> AG[LangGraph ReAct agent]
+  AG --> T[Tools: search_docs, calculator]
+  MCP[MCP server stdio] --> T
+  API --> K[Docker / kind K8s]</pre>
+<h2>Quickstart</h2><pre>git clone https://github.com/naveecode/agentops-mcp && cd agentops-mcp
+docker compose up        # API on :8000, Redis
+python -m app.mcp_server # MCP for Cursor / Claude</pre></body></html>
