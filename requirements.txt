@@ -8,3 +8,4 @@ mcp==2.3.0
 langgraph==1.2.15
 langchain-openai==1.7.1
 langchain-core==1.6.10
+pymongo==4.18.3

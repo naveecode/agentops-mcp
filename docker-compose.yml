@@ -1,3 +1,25 @@
 services:
-  api: {build: ., ports: ["8000:8000"], environment: [REDIS_URL=redis://redis:6379, OPENAI_API_KEY], depends_on: [redis]}
-  redis: {image: redis:7-alpine}
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      MONGO_URL: mongodb://mongo:27017
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      MODEL: ${MODEL:-gpt-4o-mini}
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_started
+  redis:
+    image: redis:7-alpine
+  mongo:
+    image: mongo:7
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
